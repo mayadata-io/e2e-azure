@@ -51,7 +51,7 @@ apps-aws-deploy-cstor:
   dependencies:
     - openebs-deploy
   script: 
-   - echo "jobs-Azure-Started"
+   - echo "jobs-AWS-Started"
    - chmod 775 ./script/stateful-app-deploy-cstor
    - ./script/stateful-app-deploy-cstor
   artifacts:
@@ -86,7 +86,7 @@ Litmus-Chaos-cstor:
 
 
 
-cleanup-aws:
+cleanup-azure:
   when: always
   image: atulabhi/kops:v8
   dependencies:
