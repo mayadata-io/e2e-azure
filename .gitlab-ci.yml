@@ -38,14 +38,70 @@ percona-deploy:
     - openebs-deploy
   script: 
    - echo "jobs-Azure-Started"
-   - chmod 775 ./script/stateful-app-deploy
-   - ./script/stateful-app-deploy
+   - chmod 775 ./script/percona-app-deploy
+   - ./script/percona-app-deploy
 
   artifacts:
     paths:
       - azure/
 
-apps-aws-deploy-cstor:
+jenkins-deploy:
+  image: atulabhi/kops:v8
+  stage: stateful-apps-deploy
+  dependencies:
+    - openebs-deploy
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/jenkins-app-deploy
+   - ./script/jenkins-app-deploy
+
+  artifacts:
+    paths:
+      - azure/
+
+cassandra-deploy:
+  image: atulabhi/kops:v8
+  stage: stateful-apps-deploy
+  dependencies:
+    - openebs-deploy
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/cassandra-app-deploy
+   - ./script/cassandra-app-deploy
+
+  artifacts:
+    paths:
+      - azure/
+
+mongo-deploy:
+  image: atulabhi/kops:v8
+  stage: stateful-apps-deploy
+  dependencies:
+    - openebs-deploy
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/mongo-app-deploy
+   - ./script/mongo-app-deploy
+
+  artifacts:
+    paths:
+      - azure/
+
+postgres-deploy:
+  image: atulabhi/kops:v8
+  stage: stateful-apps-deploy
+  dependencies:
+    - openebs-deploy
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/postgres-app-deploy
+   - ./script/postgres-app-deploy
+
+  artifacts:
+    paths:
+      - azure/
+
+percona-aws-deploy-cstor:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
@@ -67,7 +123,7 @@ Litmus-Chaos:
    - echo " Introducing-Chaos"
    - mkdir ~/.kube
    - cp  azure/config ~/.kube/config 
-   - kubectl create -f https://raw.githubusercontent.com/atulabhi/litmus/v0.7-RC1/apps/percona/chaos/openebs_volume_replica_failure/run_litmus_test.yaml
+   - kubectl create -f https://raw.githubusercontent.com/atulabhi/litmus/v0.7-RC1/apps/percona/chaos/openebs_volume_replica_failure/run_litmus_test.yml
    - chmod 755 ./script/chaos
    - ./script/chaos
 
