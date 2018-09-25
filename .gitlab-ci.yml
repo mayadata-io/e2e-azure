@@ -104,7 +104,7 @@ postgres-jiva:
 litmus-chaos:
   image: atulabhi/kops:v8
   dependencies:
-    - percona-deploy
+    - percona-jiva
   stage: litmus-chaos
   script:
    - chmod 775 ./script/app-chaos
