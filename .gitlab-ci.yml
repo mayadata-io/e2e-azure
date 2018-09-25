@@ -2,7 +2,7 @@ stages:
   - cluster-setup
   - infra-setup
   - stateful-apps-deploy
-  - Litmus-chaos-testing
+  - litmus-chaos
   - cleanup
   - deploy
 azure-cluster:
@@ -101,46 +101,14 @@ postgres-deploy:
     paths:
       - azure/
 
-percona-aws-deploy-cstor:
-  image: atulabhi/kops:v8
-  stage: stateful-apps-deploy
-  dependencies:
-    - openebs-deploy
-  script: 
-   - echo "jobs-AWS-Started"
-   - chmod 775 ./script/stateful-app-deploy-cstor
-   - ./script/stateful-app-deploy-cstor
-  artifacts:
-    paths:
-      - aws-cstor/
-
-Litmus-Chaos:
+litmus-chaos:
   image: atulabhi/kops:v8
   dependencies:
-    - openebs-deploy
-  stage: Litmus-chaos-testing
+    - percona-deploy
+  stage: litmus-chaos
   script:
-   - echo " Introducing-Chaos"
-   - mkdir ~/.kube
-   - cp  azure/config ~/.kube/config 
-   - kubectl create -f https://raw.githubusercontent.com/atulabhi/litmus/v0.7-RC1/apps/percona/chaos/openebs_volume_replica_failure/run_litmus_test.yml
-   - chmod 755 ./script/chaos
-   - ./script/chaos
-
-Litmus-Chaos-cstor:
-  image: atulabhi/kops:v8
-  dependencies:
-    - openebs-deploy
-  stage: Litmus-chaos-testing
-  script:
-   - echo " Introducing-Chaos"
-   - mkdir ~/.kube
-   - cp  azure/config ~/.kube/config 
-   - kubectl create -f https://raw.githubusercontent.com/atulabhi/litmus/cstor-v0.7-RC1/apps/percona/chaos/openebs_cstor_target_failure/run_litmus_test.yaml
-   - chmod +x ./script/chaoscstor
-   - ./script/chaoscstor
-
-
+   - chmod 775 ./script/app-chaos
+   - ./script/app-chaos
 
 cleanup-azure:
   when: always
