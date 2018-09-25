@@ -31,7 +31,7 @@ openebs-deploy:
     paths:
       - azure/
 
-percona-deploy:
+percona-jiva:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
@@ -45,7 +45,7 @@ percona-deploy:
     paths:
       - azure/
 
-jenkins-deploy:
+jenkins-jiva:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
@@ -59,7 +59,7 @@ jenkins-deploy:
     paths:
       - azure/
 
-cassandra-deploy:
+cassandra-jiva:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
@@ -73,7 +73,7 @@ cassandra-deploy:
     paths:
       - azure/
 
-mongo-deploy:
+mongo-jiva:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
@@ -87,7 +87,7 @@ mongo-deploy:
     paths:
       - azure/
 
-postgres-deploy:
+postgres-jiva:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
