@@ -21,33 +21,68 @@ echo $CI_PIPELINE_IID
 echo "***************************************"
 ###########
 
-# Deploy OpenEBS
-#mkdir azure
-#cp azoebs_aks_name/config azure/
+#################
+## RUNNER MAIN ##
+#################
 
+echo "Running the litmus test.."
+
+## Create the litmus job for setup OpenEBS
 wget https://raw.githubusercontent.com/atulabhi/litmus/v0.7-RC1/providers/openebs/installers/operator/master/litmusbook/openebs_setup.yaml
 
 kubectl apply -f openebs_setup.yaml
 
 sleep 120
 
-kubectl get po --all-namespaces
+## Obtain the litmus pod name 
 
+litmusPodCmd="kubectl get pod --no-headers -n litmus -o jsonpath='{.items[?(@.metadata.labels.job-name==\"$job_name\")].metadata.name}'"
+litmus_pod=$(eval $litmusPodCmd); retcode=$?
+error_handler $retcode msg="Unable to find litmus test runner pod, exiting" action="exit"
 
-litmus_pod=$(kubectl get pod -a -n litmus --no-headers -o custom-columns=:metadata.name)
-status_cmd='kubectl logs $litmus_pod -n litmus -c ansibletest'
-while [[ $(kubectl get pod $litmus_pod --no-headers -n litmus -o custom-columns=:status.phase) =~ 'Running' ]]
-do
-   echo "Still Running sir..."
+## Wait till the ansibletest container terminates && also confirm job completion status. This is done to ensure
+## that execution of auxiliary containers such as loggers is completed. Getting the ansibletest ccontainer to completed state 
+## satisfies the "necessary" condition for test job completion
+
+containerStateCmd="kubectl get pod ${litmus_pod} -n litmus -o jsonpath='{.status.containerStatuses[?(@.name==\"ansibletest\")].state}'"
+jobStateCmd="kubectl get pod ${litmus_pod} --no-headers -n litmus -o custom-columns=:status.phase"
+
+## TODO: Consider cases where litmus pod is evicted
+
+while [[ ! $(eval $containerStateCmd) =~ 'terminated' ]]; do
+  sleep 1 
+done 
+
+while [[ $(eval $jobStateCmd) =~ 'Running' ]]; do
    sleep 1
 done
-if [[ ! $(eval $status_cmd) =~ 'FAILED!' ]]; then
-   TestStatus='Pass'
+
+echo "Litmus test run Job has completed"
+task_delimiter;
+
+## Printing the test logs & cluster state for debug purposes 
+
+echo "Dumping Litmus test pod logs for debug"; echo ""
+kubectl logs $litmus_pod -n litmus -c ansibletest 
+task_delimiter; 
+
+echo "Dumping state of cluster post job run"; echo ""
+kubectl get pods --all-namespaces
+task_delimiter; 
+
+## Check the test status & result from the litmus result custom resource
+
+testStatus=$(kubectl get lr $test_name --no-headers -o custom-columns=:spec.testStatus.phase) && \
+testResult=$(kubectl get lr $test_name --no-headers -o custom-columns=:spec.testStatus.result); retcode=$?
+error_handler $retcode msg="Unable to find litmus result custom resource, exiting" action="exit"
+
+if [[ $testStatus == "completed" ]]; then
+  if [[ $testResult == "Pass" ]]; then
+    echo "TEST: PASS"
+  else 
+    echo "TEST: FAILED"; exit 1 
+  fi
 else
-  TestStatus='Fail'
-fi
-echo $TestStatus
+  echo "Test Execution was aborted"; exit 1 
+fi 
 
-echo "========================================================================="
-
-eval $status_cmd
