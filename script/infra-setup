@@ -20,6 +20,25 @@ echo $CI_PIPELINE_ID
 echo $CI_PIPELINE_IID
 echo "***************************************"
 ###########
+################
+## FUNCTIONS  ##
+################
+
+error_handler()
+{
+rc=$1; message=$(echo $2 | cut -d "=" -f 2); act=$(echo $3 | cut -d "=" -f 2)
+if [ $rc -ne 0 ]; then
+  echo "$message"
+  if [ "$act" == "exit" ]; then
+    exit 1 
+  fi
+fi
+}
+
+task_delimiter()
+{
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' "%"
+}
 
 #################
 ## RUNNER MAIN ##
@@ -32,13 +51,12 @@ wget https://raw.githubusercontent.com/atulabhi/litmus/v0.7-RC1/providers/openeb
 
 kubectl apply -f openebs_setup.yaml
 
-sleep 120
-
 ## Obtain the litmus pod name 
 
 litmusPodCmd="kubectl get pod --no-headers -n litmus -o jsonpath='{.items[?(@.metadata.labels.job-name==\"$job_name\")].metadata.name}'"
 litmus_pod=$(eval $litmusPodCmd); retcode=$?
 error_handler $retcode msg="Unable to find litmus test runner pod, exiting" action="exit"
+task_delimiter; 
 
 ## Wait till the ansibletest container terminates && also confirm job completion status. This is done to ensure
 ## that execution of auxiliary containers such as loggers is completed. Getting the ansibletest ccontainer to completed state 
@@ -58,7 +76,6 @@ while [[ $(eval $jobStateCmd) =~ 'Running' ]]; do
 done
 
 echo "Litmus test run Job has completed"
-task_delimiter;
 
 ## Printing the test logs & cluster state for debug purposes 
 
