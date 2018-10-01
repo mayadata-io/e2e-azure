@@ -48,8 +48,10 @@ cp  azure/config ~/.kube/config
 
 ## Clone the litmus repo, checkout the e2e branch, navigate to litmus root 
 
-git clone https://github.com/atulabhi/litmus.git
-cd litmus; git checkout v0.7-RC1
+#git clone https://github.com/atulabhi/litmus.git
+#cd litmus; git checkout v0.7-RC1
+git clone https://github.com/dargasudarshan/litmus.git
+cd litmus; git checkout test
 
 task_delimiter;
 
@@ -66,9 +68,9 @@ task_delimiter;
 
 echo "Running the litmus test.."
 
-## Create the litmus job for cassandra app deploy
+## Create the litmus job for cassandra loadgen
 
-jobNameCmd="kubectl get jobs -n litmus --no-headers -o jsonpath='{.items[?(@.metadata.labels.app==\"cassandra-deployment-litmus\")].metadata.name}'"
+jobNameCmd="kubectl get jobs -n litmus --no-headers -o jsonpath='{.items[?(@.metadata.labels.loadgen==\"cassandra-loadjob\")].metadata.name}'"
 
 job_deploy_out=$(kubectl create -f apps/cassandra/workload/run_litmus_test.yml) && \
 job_name=$(eval $jobNameCmd); retcode=$?
