@@ -117,20 +117,6 @@ cassandra-loadgen:
     paths:
       - azure/
 
-mongodb-loadgen:
-  image: atulabhi/kops:v8
-  stage: apps-loadgen
-  dependencies:
-    - mongodb-jiva
-  script: 
-   - echo "jobs-Azure-Started"
-   - chmod 775 ./script/mongodb-loadgen
-   - ./script/mongodb-loadgen
-
-  artifacts:
-    paths:
-      - azure/
-
 percona-loadgen:
   image: atulabhi/kops:v8
   stage: apps-loadgen
@@ -148,7 +134,7 @@ percona-loadgen:
 litmus-chaos:
   image: atulabhi/kops:v8
   dependencies:
-    - percona-jiva
+    - percona-loadgen
   stage: litmus-chaos
   script:
    - chmod 775 ./script/app-chaos
