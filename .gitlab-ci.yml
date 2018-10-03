@@ -82,8 +82,8 @@ mongodb-jiva:
     - openebs-deploy
   script: 
    - echo "jobs-Azure-Started"
-   - chmod 775 ./script/mongo-app-deploy
-   - ./script/mongo-app-deploy
+   - chmod 775 ./script/mongodb-app-deploy
+   - ./script/mongodb-app-deploy
 
   artifacts:
     paths:
@@ -126,6 +126,20 @@ percona-loadgen:
    - echo "jobs-Azure-Started"
    - chmod 775 ./script/percona-loadgen
    - ./script/percona-loadgen
+
+  artifacts:
+    paths:
+      - azure/
+
+mongodb-loadgen:
+  image: atulabhi/kops:v8
+  stage: apps-loadgen
+  dependencies:
+    - mongodb-jiva
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/mongodb-loadgen
+   - ./script/mongodb-loadgen
 
   artifacts:
     paths:
