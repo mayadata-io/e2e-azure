@@ -18,13 +18,12 @@ az -v
 echo $AZURE_USER
 az login -u $AZURE_USER -p $AZURE_PASSWORD
 echo "Setup azure cluster"
-git clone https://github.com/harshvkarn/litmus.git
+git clone https://github.com/openebs/litmus.git
 cd litmus
-git checkout azure-support
-cd k8s/azure
+cd k8s/azure/k8s-installer
 echo "creating  cluster"
 
-ansible-playbook create-k8s-cluster.yml -v --extra-vars "azure_username=$AZURE_USER azure_password=$AZURE_PASSWORD"
+ansible-playbook create-k8s-cluster.yml -v --extra-vars "nodes=3"
 
 sleep 30
 kubectl get nodes
