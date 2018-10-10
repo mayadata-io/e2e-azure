@@ -23,4 +23,4 @@ pwd
 mkdir ~/logs
 cp /openebs/e2e-azure/azoebs_aks_name/azure_clusters ~/logs/
 
-ansible-playbook delete-k8s-cluster.yml --extra-vars "azure_username=$AZURE_USER azure_password=$AZURE_PASSWORD"
+ansible-playbook delete-k8s-cluster.yml
