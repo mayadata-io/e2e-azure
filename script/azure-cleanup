@@ -15,11 +15,12 @@ az -v
 echo $AZURE_USER
 az login -u $AZURE_USER -p $AZURE_PASSWORD
 
-git clone https://github.com/harshvkarn/litmus.git
+git clone https://github.com/openebs/litmus.git
 cd litmus
-git checkout azure-support
-cd k8s/azure
+cd k8s/azure/k8s-installer
 
-cp /openebs/e2e-azure/azoebs_aks_name/oebs_aks_name .
+pwd
+mkdir ~/logs
+cp /openebs/e2e-azure/azoebs_aks_name/azure_clusters ~/logs/
 
-ansible-playbook delete-k8s-cluster.yml --extra-vars "azure_username=$AZURE_USER azure_password=$AZURE_PASSWORD"
+ansible-playbook delete-k8s-cluster.yml
