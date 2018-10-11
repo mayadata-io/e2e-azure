@@ -12,7 +12,6 @@ sudo apt-get update && sudo apt-get install azure-cli
 
 echo "Checking Azure CLI Version"
 az -v
-echo $AZURE_USER
 az login -u $AZURE_USER -p $AZURE_PASSWORD
 
 git clone https://github.com/openebs/litmus.git
