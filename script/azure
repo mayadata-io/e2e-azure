@@ -22,7 +22,7 @@ cd litmus
 cd k8s/azure/k8s-installer
 echo "creating  cluster"
 
-ansible-playbook create-k8s-cluster.yml -v --extra-vars "nodes=3"
+ansible-playbook create-k8s-cluster.yml -v --extra-vars "nodes=3 node_size=Standard_D3"
 
 sleep 30
 kubectl get nodes
