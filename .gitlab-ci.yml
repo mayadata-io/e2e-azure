@@ -2,9 +2,11 @@ stages:
   - cluster-setup
   - infra-setup
   - stateful-apps-deploy
+  - apps-loadgen
   - litmus-chaos
   - cleanup
   - deploy
+
 azure-cluster:
   image: atulabhi/kops:v8
   stage: cluster-setup
@@ -73,15 +75,15 @@ cassandra-jiva:
     paths:
       - azure/
 
-mongo-jiva:
+mongodb-jiva:
   image: atulabhi/kops:v8
   stage: stateful-apps-deploy
   dependencies:
     - openebs-deploy
   script: 
    - echo "jobs-Azure-Started"
-   - chmod 775 ./script/mongo-app-deploy
-   - ./script/mongo-app-deploy
+   - chmod 775 ./script/mongodb-app-deploy
+   - ./script/mongodb-app-deploy
 
   artifacts:
     paths:
@@ -101,10 +103,52 @@ postgres-jiva:
     paths:
       - azure/
 
+cassandra-loadgen:
+  image: atulabhi/kops:v8
+  stage: apps-loadgen
+  dependencies:
+    - cassandra-jiva
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/cassandra-loadgen
+   - ./script/cassandra-loadgen
+
+  artifacts:
+    paths:
+      - azure/
+
+percona-loadgen:
+  image: atulabhi/kops:v8
+  stage: apps-loadgen
+  dependencies:
+    - percona-jiva
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/percona-loadgen
+   - ./script/percona-loadgen
+
+  artifacts:
+    paths:
+      - azure/
+
+mongodb-loadgen:
+  image: atulabhi/kops:v8
+  stage: apps-loadgen
+  dependencies:
+    - mongodb-jiva
+  script: 
+   - echo "jobs-Azure-Started"
+   - chmod 775 ./script/mongodb-loadgen
+   - ./script/mongodb-loadgen
+
+  artifacts:
+    paths:
+      - azure/
+
 litmus-chaos:
   image: atulabhi/kops:v8
   dependencies:
-    - percona-jiva
+    - percona-loadgen
   stage: litmus-chaos
   script:
    - chmod 775 ./script/app-chaos
