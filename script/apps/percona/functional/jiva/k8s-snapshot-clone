@@ -5,15 +5,17 @@ set -x
 ## ENVIRONMENT ##
 #################
 
-## https://github.com/openebs/litmus/blob/master/apps/crunchy-postgres/deployers/test_vars.yml
-test_name=$(${utils_path}/generate_test_name testcase=postgres-deployment metadata="")
+## https://github.com/openebs/litmus/blob/master/apps/percona/functional/k8s_snapshot/test_vars.yml
+test_name=$(${utils_path}/generate_test_name testcase=create-k8s-snapshot-clone metadata="")
 
 ###################
 ## DEPENDENCIES  ##
 ###################
+
 ${utils_path}/setup_dependencies litmus-test
 
-## Clone the litmus repo, checkout the e2e branch, navigate to litmus root 
+## Clone the litmus repo, navigate to litmus root 
+
 git clone https://github.com/openebs/litmus.git
 cd litmus
 
@@ -21,14 +23,15 @@ cd litmus
 ## LITMUS PRECONDITIONING ##
 ############################
 
-cp apps/crunchy-postgres/deployers/run_litmus_test.yml run_test.yml
+cp apps/percona/functional/k8s_snapshot/run_litmus_test.yml run_test.yml
 
 #################
 ## RUNNER MAIN ##
 #################
 
+## TODO: Keep testnames & label names similar & keep keys consistent for a type of test
 echo "Running the litmus test.."
-${utils_path}/litmus_job_runner label='app:postgres-deployment-litmus' job=run_test.yml
+${utils_path}/litmus_job_runner label='app:k8s-snapshot-litmus' job=run_test.yml
 ${utils_path}/task_delimiter;
 
 echo "Dumping state of cluster post job run"; echo ""
@@ -41,3 +44,7 @@ ${utils_path}/task_delimiter;
 
 ## Check the test status & result from the litmus result custom resource
 ${utils_path}/get_litmus_result ${test_name}
+
+
+
+
