@@ -228,6 +228,11 @@ ctrl-disconnect-{postgres-jiva}:
   script:
    - ./script/apps/postgres/chaos/jiva/volume-controller-network-delay
 
+app-kill-{jenkins-cstor}:
+  extends: .chaos_test_template #dependencies: jenkins-cstor
+  script:
+   - ./script/apps/jenkins/chaos/cstor/application-pod-failure
+
 tgt-kill-{percona-cstor}:
   extends: .chaos_test_template #dependencies: percona-cstor
   script:
