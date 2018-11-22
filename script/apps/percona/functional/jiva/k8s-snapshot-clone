@@ -5,21 +5,16 @@ set -x
 ## ENVIRONMENT ##
 #################
 
-## https://github.com/openebs/litmus/blob/master/apps/cassandra/functional/scale_replicas/test_vars.yml 
-test_name=$(${utils_path}/generate_test_name testcase=scale-app-replicas metadata="")
+## https://github.com/openebs/litmus/blob/master/apps/percona/functional/k8s_snapshot/test_vars.yml
+test_name=$(${utils_path}/generate_test_name testcase=create-k8s-snapshot-clone metadata="")
 
 ###################
 ## DEPENDENCIES  ##
 ###################
 
-echo "Setting up test dependencies.."
- 
 ${utils_path}/setup_dependencies litmus-test
 
-## Clone the litmus repo, checkout the e2e branch, navigate to litmus root 
-
-#git clone https://github.com/atulabhi/litmus.git
-#cd litmus; git checkout v0.7-RC1
+## Clone the litmus repo, navigate to litmus root 
 
 git clone https://github.com/openebs/litmus.git
 cd litmus
@@ -28,23 +23,20 @@ cd litmus
 ## LITMUS PRECONDITIONING ##
 ############################
 
-cp apps/cassandra/functional/scale_replicas/run_litmus_test.yml run_test.yml
+cp apps/percona/functional/k8s_snapshot/run_litmus_test.yml run_test.yml
 
 #################
 ## RUNNER MAIN ##
 #################
 
+## TODO: Keep testnames & label names similar & keep keys consistent for a type of test
 echo "Running the litmus test.."
-
-## Create the litmus job for cassandra app func test: scale-app-replicas
-
-${utils_path}/litmus_job_runner label='app:cassandra-scaleup-litmus' job=run_test.yml
+${utils_path}/litmus_job_runner label='app:k8s-snapshot-litmus' job=run_test.yml
 ${utils_path}/task_delimiter;
 
 echo "Dumping state of cluster post job run"; echo ""
 ${utils_path}/dump_cluster_state;
 ${utils_path}/task_delimiter;
-
 
 #################
 ## GET RESULT  ##
@@ -52,3 +44,7 @@ ${utils_path}/task_delimiter;
 
 ## Check the test status & result from the litmus result custom resource
 ${utils_path}/get_litmus_result ${test_name}
+
+
+
+

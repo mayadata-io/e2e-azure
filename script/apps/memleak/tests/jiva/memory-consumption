@@ -5,8 +5,8 @@ set -x
 ## ENVIRONMENT ##
 #################
 
-## https://github.com/openebs/litmus/blob/master/apps/cassandra/functional/scale_replicas/test_vars.yml 
-test_name=$(${utils_path}/generate_test_name testcase=scale-app-replicas metadata="")
+## https://github.com/openebs/litmus/blob/master/apps/fio/tests/data-integrity/test_vars.yml
+test_name=$(${utils_path}/generate_test_name testcase=memleak-test metadata="")
 
 ###################
 ## DEPENDENCIES  ##
@@ -18,9 +18,6 @@ ${utils_path}/setup_dependencies litmus-test
 
 ## Clone the litmus repo, checkout the e2e branch, navigate to litmus root 
 
-#git clone https://github.com/atulabhi/litmus.git
-#cd litmus; git checkout v0.7-RC1
-
 git clone https://github.com/openebs/litmus.git
 cd litmus
 
@@ -28,7 +25,7 @@ cd litmus
 ## LITMUS PRECONDITIONING ##
 ############################
 
-cp apps/cassandra/functional/scale_replicas/run_litmus_test.yml run_test.yml
+cp apps/custom/tests/memcheck/run_litmus_test.yml run_test.yml
 
 #################
 ## RUNNER MAIN ##
@@ -36,9 +33,7 @@ cp apps/cassandra/functional/scale_replicas/run_litmus_test.yml run_test.yml
 
 echo "Running the litmus test.."
 
-## Create the litmus job for cassandra app func test: scale-app-replicas
-
-${utils_path}/litmus_job_runner label='app:cassandra-scaleup-litmus' job=run_test.yml
+${utils_path}/litmus_job_runner label='app:memleak-test' job=run_test.yml
 ${utils_path}/task_delimiter;
 
 echo "Dumping state of cluster post job run"; echo ""
@@ -52,3 +47,4 @@ ${utils_path}/task_delimiter;
 
 ## Check the test status & result from the litmus result custom resource
 ${utils_path}/get_litmus_result ${test_name}
+
