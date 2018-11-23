@@ -135,36 +135,36 @@ mongo-cstor-run/load/check 1:2:
    - ./script/apps/mongo/workload/cstor/mongo-app-workload-cstor
 
 # CASSANDRA_CSTOR
-cassandra-cstor-run/load/check 0:2:
-  extends: .app_deploy_template
-  script:
-   - ./script/apps/cassandra/deployer/cassandra-app-deploy-cstor
+#cassandra-cstor-run/load/check 0:2:
+#extends: .app_deploy_template
+# script:
+#  - ./script/apps/cassandra/deployer/cassandra-app-deploy-cstor
 
-cassandra-cstor-run/load/check 1:2:
-  extends: .app_deploy_template
-  before_script:
-   - sleep 180
-  script:
-   - ./script/apps/cassandra/workload/cstor/cassandra-app-workload-cstor
+     #cassandra-cstor-run/load/check 1:2:
+     #  extends: .app_deploy_template
+     #  before_script:
+     #   - sleep 180
+     #  script:
+     #   - ./script/apps/cassandra/workload/cstor/cassandra-app-workload-cstor
 
 # POSTGRES-CSTOR
-postgres-cstor-run/load/check 0:2:
-  extends: .app_deploy_template
-  script: 
-   - ./script/apps/postgres/deployer/postgres-app-deploy-cstor
+#postgres-cstor-run/load/check 0:2:
+# extends: .app_deploy_template
+# script: 
+#  - ./script/apps/postgres/deployer/postgres-app-deploy-cstor
 
-postgres-cstor-run/load/check 1:2:
-  extends: .app_deploy_template
-  before_script: 
-   - sleep 180
-  script: 
-   - ./script/apps/postgres/workload/cstor/postgres-app-workload-cstor
+     #postgres-cstor-run/load/check 1:2:
+     #  extends: .app_deploy_template
+     #  before_script: 
+     #   - sleep 180
+     #  script: 
+     #   - ./script/apps/postgres/workload/cstor/postgres-app-workload-cstor
 
 # JENKINS_CSTOR
-jenkins-cstor-run/load/check:
-  extends: .app_deploy_template
-  script:
-   - ./script/apps/jenkins/deployer/jenkins-app-deploy-cstor 
+#jenkins-cstor-run/load/check:
+# extends: .app_deploy_template
+# script:
+#  - ./script/apps/jenkins/deployer/jenkins-app-deploy-cstor 
 
 ## Define job template for func test jobs  
 
@@ -191,10 +191,10 @@ volume-data-integrity-{fio-jiva}:
   script:
    - ./script/apps/fio/tests/jiva/fio-volume-data-integrity-check
 
-volume-data-integrity-{fio-cstor}:
-  extends: .func_test_template
-  script:
-   - ./script/apps/fio/tests/cstor/fio-volume-data-integrity-check
+     #volume-data-integrity-{fio-cstor}:
+     #  extends: .func_test_template
+     #  script:
+     #   - ./script/apps/fio/tests/cstor/fio-volume-data-integrity-check
 
 volume-memory-consumption-{memcheck-jiva}:
   extends: .func_test_template
@@ -206,15 +206,15 @@ k8s-snapshot-clone-creation-{snapshot-clone-jiva}:
   script:
    - ./script/apps/percona/functional/jiva/k8s-snapshot-clone
 
-app-replica-scale-{cassandra-cstor}:
-  extends: .func_test_template #dependencies: cassandra-cstor
-  script:
-   - ./script/apps/cassandra/functional/cstor/app-sts-replica-scale
+     #app-replica-scale-{cassandra-cstor}:
+     #  extends: .func_test_template #dependencies: cassandra-cstor
+     #  script:
+     #   - ./script/apps/cassandra/functional/cstor/app-sts-replica-scale
 
-app-upgrade-deployment-{jenkins-cstor}:
-  extends: .func_test_template #dependencies: jenkins-cstor
-  script:
-   - ./script/apps/jenkins/functional/cstor/app-upgrade-deployment
+     #app-upgrade-deployment-{jenkins-cstor}:
+     #  extends: .func_test_template #dependencies: jenkins-cstor
+     #  script:
+     #   - ./script/apps/jenkins/functional/cstor/app-upgrade-deployment
 
 ## Define job template for chaos jobs 
 
@@ -246,10 +246,10 @@ ctrl-disconnect-{postgres-jiva}:
   script:
    - ./script/apps/postgres/chaos/jiva/volume-controller-network-delay
 
-app-kill-{jenkins-cstor}:
-  extends: .chaos_test_template #dependencies: jenkins-cstor
-  script:
-   - ./script/apps/jenkins/chaos/cstor/application-pod-failure
+     #app-kill-{jenkins-cstor}:
+     #  extends: .chaos_test_template #dependencies: jenkins-cstor
+     #  script:
+     #   - ./script/apps/jenkins/chaos/cstor/application-pod-failure
 
 tgt-kill-{percona-cstor}:
   extends: .chaos_test_template #dependencies: percona-cstor
