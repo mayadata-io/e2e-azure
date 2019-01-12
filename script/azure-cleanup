@@ -1,6 +1,8 @@
 #!/bin/bash
 
 set -e
+path=$(pwd)
+
 AZ_REPO=$(lsb_release -cs)
 echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
     sudo tee /etc/apt/sources.list.d/azure-cli.list
@@ -20,6 +22,6 @@ cd k8s/azure/k8s-installer
 
 pwd
 mkdir ~/logs
-cp /openebs/e2e-azure/azoebs_aks_name/azure_clusters ~/logs/
+cp $path/azoebs_aks_name/azure_clusters ~/logs/
 
 ansible-playbook delete-k8s-cluster.yml

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+path=$(pwd)
+
 echo "Checking Azure CLI Version"
 az -v
 az login -u $AZURE_USER -p $AZURE_PASSWORD
@@ -20,11 +22,11 @@ kubectl apply -f rbac.yaml
 
 cd ../../../..
 
-mkdir azoebs_aks_name
+mkdir $path/azoebs_aks_name
 
-cat ~/.kube/config > /openebs/e2e-azure/azoebs_aks_name/admin.conf
-cat ~/.kube/config > /openebs/e2e-azure/azoebs_aks_name/config 
+cat ~/.kube/config > $path/azoebs_aks_name/admin.conf
+cat ~/.kube/config > $path/azoebs_aks_name/config 
 #copy cluster name to artifact
-cat ~/logs/azure_clusters > /openebs/e2e-azure/azoebs_aks_name/azure_clusters
+cat ~/logs/azure_clusters > $path/azoebs_aks_name/azure_clusters
  
-kubectl create configmap kubeconfig --from-file=/openebs/e2e-azure/azoebs_aks_name/admin.conf -n litmus
+kubectl create configmap kubeconfig --from-file=$path/azoebs_aks_name/admin.conf -n litmus
